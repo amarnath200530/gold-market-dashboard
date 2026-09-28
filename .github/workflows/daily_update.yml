@@ -38,7 +38,7 @@ jobs:
           END=$((SECONDS + 340*60))
           while [ $SECONDS -lt $END ]; do
             python dashboard.py || echo "Script error - will retry next cycle"
-            git add output/latest_report.md output/history.csv
+            git add output/ 2>/dev/null || true
             git commit -m "Dashboard update [skip ci]" --quiet || echo "No changes"
             git pull --rebase --quiet || echo "Pull failed - continuing anyway"
             git push --quiet || echo "Push failed - retry next cycle"
