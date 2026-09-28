@@ -168,3 +168,49 @@ signal = {
 
 with open("output/latest_signal.json", "w") as f:
     json.dump(signal, f)
+
+import requests
+import csv
+from datetime import datetime, timezone
+
+def fetch_news_calendar():
+    url = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
+    try:
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        events = resp.json()
+    except Exception as e:
+        print(f"News calendar fetch failed: {e}")
+        return
+
+    rows = []
+    for ev in events:
+        impact = ev.get("impact", "")
+        currency = ev.get("country", "")
+        if impact != "High" or currency != "USD":
+            continue  # Only high-impact USD events matter for XAUUSD
+
+        # ForexFactory feed gives date/time in various formats; normalize to UTC
+        try:
+            dt_str = ev.get("date")  # e.g. "2026-09-28T12:30:00-04:00"
+            dt = datetime.fromisoformat(dt_str)
+            dt_utc = dt.astimezone(timezone.utc)
+        except Exception:
+            continue
+
+        rows.append({
+            "date_utc": dt_utc.strftime("%Y.%m.%d"),
+            "time_utc": dt_utc.strftime("%H:%M"),
+            "event": ev.get("title", "Unknown"),
+            "impact": impact,
+            "currency": currency
+        })
+
+    with open("output/news_calendar.csv", "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["date_utc","time_utc","event","impact","currency"])
+        writer.writeheader()
+        writer.writerows(rows)
+
+    print(f"News calendar updated: {len(rows)} high-impact USD events this week.")
+
+fetch_news_calendar()
