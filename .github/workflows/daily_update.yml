@@ -2,17 +2,17 @@ name: Gold Market Dashboard (3-min refresh)
 
 on:
   schedule:
-    - cron: '0 */6 * * 1-5'   # Starts a new loop every 6 hours, weekdays
-  workflow_dispatch:           # Manual start button
+    - cron: '0 */6 * * 1-5'
+  workflow_dispatch:
 
 concurrency:
-  group: gold-dashboard        # Prevents two loops running at once
+  group: gold-dashboard
   cancel-in-progress: false
 
 jobs:
   update-dashboard:
     runs-on: ubuntu-latest
-    timeout-minutes: 355       # GitHub max is 360
+    timeout-minutes: 355
     permissions:
       contents: write
 
@@ -35,11 +35,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          END=$((SECONDS + 340*60))   # Loop for 340 minutes
+          END=$((SECONDS + 340*60))
           while [ $SECONDS -lt $END ]; do
             python dashboard.py || echo "Script error - will retry next cycle"
-            git add output/latest_report.md
+            git add output/latest_report.md output/history.csv
             git commit -m "Dashboard update [skip ci]" --quiet || echo "No changes"
-            git pull --rebase --quiet && git push --quiet || echo "Push failed - retry next cycle"
+            git pull --rebase --quiet || echo "Pull failed - continuing anyway"
+            git push --quiet || echo "Push failed - retry next cycle"
             sleep 180
           done
