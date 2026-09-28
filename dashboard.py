@@ -150,3 +150,21 @@ else:
     df_row.to_csv(history_path, mode='w', header=True, index=False)
 
 print("Report generated and history logged successfully.")
+
+
+import json
+
+signal = {
+    "timestamp_utc": now_utc.isoformat(),
+    "score": score,
+    "verdict": verdict,
+    "real_yield_10y": float(real_10y.iloc[-1]),
+    "real_yield_10y_1m_chg": float(real_10y_chg),
+    "dxy": float(dxy['Close'].iloc[-1]),
+    "dxy_1m_chg_pct": float(dxy_chg),
+    "vix": float(vix_now),
+    "gold_price": float(gold_price),
+}
+
+with open("output/latest_signal.json", "w") as f:
+    json.dump(signal, f)
