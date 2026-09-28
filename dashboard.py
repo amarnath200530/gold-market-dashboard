@@ -72,6 +72,45 @@ section("ETF Flows & COT Positioning")
 log("- [SPDR Gold Shares (GLD) Holdings](https://www.spdrgoldshares.com)")
 log("- [CFTC COT Report](https://www.cftc.gov/dea/futures/other_lf.htm) (updated weekly, Fridays 3:30pm ET)")
 
+# ============ GOLD BIAS SCORE ============
+section("Gold Bias Score (rule-based signal, NOT a forecast)")
+score = 0
+rows = []
+
+ry_chg = real_10y.iloc[-1] - real_10y.iloc[-22]
+if ry_chg < -0.10:   s = 1;  note = "Real yields falling"
+elif ry_chg > 0.10:  s = -1; note = "Real yields rising"
+else:                s = 0;  note = "Real yields flat"
+score += s; rows.append(("Real yields (1M chg)", f"{ry_chg:+.2f}", s, note))
+
+be_chg = breakeven_10y.iloc[-1] - breakeven_10y.iloc[-22]
+if be_chg > 0.10:    s = 1;  note = "Inflation expectations rising"
+elif be_chg < -0.10: s = -1; note = "Inflation expectations falling"
+else:                s = 0;  note = "Inflation expectations stable"
+score += s; rows.append(("10Y breakeven (1M chg)", f"{be_chg:+.2f}", s, note))
+
+dxy_chg = (dxy['Close'].iloc[-1] / dxy['Close'].iloc[0] - 1) * 100
+if dxy_chg < -1:     s = 1;  note = "Dollar weakening"
+elif dxy_chg > 1:    s = -1; note = "Dollar strengthening"
+else:                s = 0;  note = "Dollar flat"
+score += s; rows.append(("DXY (1M % chg)", f"{dxy_chg:+.2f}%", s, note))
+
+vix_now = vix['Close'].iloc[-1]
+if vix_now > 25:     s = 1;  note = "Elevated fear - safe-haven demand"
+else:                s = 0;  note = "No significant fear"
+score += s; rows.append(("VIX", f"{vix_now:.2f}", s, note))
+
+log("| Factor | Value | Score | Reading |")
+log("|---|---|---|---|")
+for name, val, s, note in rows:
+    log(f"| {name} | {val} | {s:+d} | {note} |")
+
+if score >= 2:    verdict = "🟢 BULLISH pressure on gold"
+elif score <= -2: verdict = "🔴 BEARISH pressure on gold"
+else:             verdict = "⚪ NEUTRAL / mixed signals"
+log(f"\n**Total score: {score:+d} → {verdict}**")
+log("\n_Note: Excludes central bank buying, COT and geopolitics (no live data). Not financial advice._")
+
 # ============ WRITE OUTPUT ============
 report = f"# Gold Market Dashboard\n\n_Last updated: {datetime.utcnow()} UTC_\n" + "\n".join(output_lines)
 
