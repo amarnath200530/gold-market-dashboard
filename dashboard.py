@@ -2,7 +2,7 @@ import fredapi
 import yfinance as yf
 import pandas as pd
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 FRED_API_KEY = os.environ.get("FRED_API_KEY")
 fred = fredapi.Fred(api_key=FRED_API_KEY)
@@ -18,30 +18,36 @@ def log(text):
 # ============ REAL INTEREST RATES ============
 section("US Real Interest Rates")
 real_10y = fred.get_series('DFII10').dropna()
+real_10y_chg = real_10y.iloc[-1] - real_10y.iloc[-22]
 log(f"- **10Y TIPS Real Yield:** {real_10y.iloc[-1]:.2f}% (as of {real_10y.index[-1].date()})")
-log(f"- **1-Month Change:** {real_10y.iloc[-1] - real_10y.iloc[-22]:.2f} pts")
+log(f"- **1-Month Change:** {real_10y_chg:.2f} pts")
 
 # ============ INFLATION EXPECTATIONS ============
 section("Inflation Expectations")
 breakeven_10y = fred.get_series('T10YIE').dropna()
 breakeven_5y = fred.get_series('T5YIE').dropna()
+breakeven_10y_chg = breakeven_10y.iloc[-1] - breakeven_10y.iloc[-22]
 log(f"- **10Y Breakeven Inflation:** {breakeven_10y.iloc[-1]:.2f}%")
 log(f"- **5Y Breakeven Inflation:** {breakeven_5y.iloc[-1]:.2f}%")
 
 # ============ DOLLAR STRENGTH (DXY) ============
 section("US Dollar Index (DXY)")
 dxy = yf.Ticker("DX-Y.NYB").history(period="1mo")
+dxy_chg = (dxy['Close'].iloc[-1] / dxy['Close'].iloc[0] - 1) * 100
 log(f"- **DXY Latest:** {dxy['Close'].iloc[-1]:.2f}")
-log(f"- **1-Month Change:** {((dxy['Close'].iloc[-1] / dxy['Close'].iloc[0]) - 1)*100:.2f}%")
+log(f"- **1-Month Change:** {dxy_chg:.2f}%")
 
 # ============ SAFE-HAVEN PROXY ============
 section("Safe-Haven Demand Proxy (VIX & Gold)")
 vix = yf.Ticker("^VIX").history(period="5d")
-log(f"- **VIX Latest:** {vix['Close'].iloc[-1]:.2f}")
+vix_now = vix['Close'].iloc[-1]
+log(f"- **VIX Latest:** {vix_now:.2f}")
 
 gold = yf.Ticker("GC=F").history(period="1mo")
-log(f"- **Gold Spot (Futures):** ${gold['Close'].iloc[-1]:.2f}")
-log(f"- **1-Month Change:** {((gold['Close'].iloc[-1] / gold['Close'].iloc[0]) - 1)*100:.2f}%")
+gold_price = gold['Close'].iloc[-1]
+gold_chg = (gold['Close'].iloc[-1] / gold['Close'].iloc[0] - 1) * 100
+log(f"- **Gold Spot (Futures):** ${gold_price:.2f}")
+log(f"- **1-Month Change:** {gold_chg:.2f}%")
 
 # ============ FED POLICY ============
 section("Fed Policy Expectations")
@@ -77,25 +83,21 @@ section("Gold Bias Score (rule-based signal, NOT a forecast)")
 score = 0
 rows = []
 
-ry_chg = real_10y.iloc[-1] - real_10y.iloc[-22]
-if ry_chg < -0.10:   s = 1;  note = "Real yields falling"
-elif ry_chg > 0.10:  s = -1; note = "Real yields rising"
-else:                s = 0;  note = "Real yields flat"
-score += s; rows.append(("Real yields (1M chg)", f"{ry_chg:+.2f}", s, note))
+if real_10y_chg < -0.10:   s = 1;  note = "Real yields falling"
+elif real_10y_chg > 0.10:  s = -1; note = "Real yields rising"
+else:                      s = 0;  note = "Real yields flat"
+score += s; rows.append(("Real yields (1M chg)", f"{real_10y_chg:+.2f}", s, note))
 
-be_chg = breakeven_10y.iloc[-1] - breakeven_10y.iloc[-22]
-if be_chg > 0.10:    s = 1;  note = "Inflation expectations rising"
-elif be_chg < -0.10: s = -1; note = "Inflation expectations falling"
-else:                s = 0;  note = "Inflation expectations stable"
-score += s; rows.append(("10Y breakeven (1M chg)", f"{be_chg:+.2f}", s, note))
+if breakeven_10y_chg > 0.10:    s = 1;  note = "Inflation expectations rising"
+elif breakeven_10y_chg < -0.10: s = -1; note = "Inflation expectations falling"
+else:                           s = 0;  note = "Inflation expectations stable"
+score += s; rows.append(("10Y breakeven (1M chg)", f"{breakeven_10y_chg:+.2f}", s, note))
 
-dxy_chg = (dxy['Close'].iloc[-1] / dxy['Close'].iloc[0] - 1) * 100
 if dxy_chg < -1:     s = 1;  note = "Dollar weakening"
 elif dxy_chg > 1:    s = -1; note = "Dollar strengthening"
 else:                s = 0;  note = "Dollar flat"
 score += s; rows.append(("DXY (1M % chg)", f"{dxy_chg:+.2f}%", s, note))
 
-vix_now = vix['Close'].iloc[-1]
 if vix_now > 25:     s = 1;  note = "Elevated fear - safe-haven demand"
 else:                s = 0;  note = "No significant fear"
 score += s; rows.append(("VIX", f"{vix_now:.2f}", s, note))
@@ -105,17 +107,46 @@ log("|---|---|---|---|")
 for name, val, s, note in rows:
     log(f"| {name} | {val} | {s:+d} | {note} |")
 
-if score >= 2:    verdict = "🟢 BULLISH pressure on gold"
-elif score <= -2: verdict = "🔴 BEARISH pressure on gold"
-else:             verdict = "⚪ NEUTRAL / mixed signals"
-log(f"\n**Total score: {score:+d} → {verdict}**")
+if score >= 2:    verdict = "BULLISH pressure on gold"
+elif score <= -2: verdict = "BEARISH pressure on gold"
+else:             verdict = "NEUTRAL / mixed signals"
+log(f"\n**Total score: {score:+d} -> {verdict}**")
 log("\n_Note: Excludes central bank buying, COT and geopolitics (no live data). Not financial advice._")
 
-# ============ WRITE OUTPUT ============
-report = f"# Gold Market Dashboard\n\n_Last updated: {datetime.utcnow()} UTC_\n" + "\n".join(output_lines)
+# ============ WRITE MARKDOWN REPORT ============
+now_utc = datetime.now(timezone.utc)
+report = f"# Gold Market Dashboard\n\n_Last updated: {now_utc} UTC_\n" + "\n".join(output_lines)
 
 os.makedirs("output", exist_ok=True)
 with open("output/latest_report.md", "w") as f:
     f.write(report)
 
-print("Report generated successfully.")
+# ============ APPEND TO HISTORICAL CSV ============
+history_path = "output/history.csv"
+
+row = {
+    "timestamp_utc": now_utc.isoformat(),
+    "real_yield_10y": real_10y.iloc[-1],
+    "real_yield_10y_1m_chg": real_10y_chg,
+    "breakeven_10y": breakeven_10y.iloc[-1],
+    "breakeven_5y": breakeven_5y.iloc[-1],
+    "breakeven_10y_1m_chg": breakeven_10y_chg,
+    "dxy": dxy['Close'].iloc[-1],
+    "dxy_1m_chg_pct": dxy_chg,
+    "vix": vix_now,
+    "gold_price": gold_price,
+    "gold_1m_chg_pct": gold_chg,
+    "fed_funds_rate": fed_funds.iloc[-1],
+    "cpi_yoy_pct": cpi_yoy,
+    "bias_score": score,
+    "bias_verdict": verdict,
+}
+
+df_row = pd.DataFrame([row])
+
+if os.path.exists(history_path):
+    df_row.to_csv(history_path, mode='a', header=False, index=False)
+else:
+    df_row.to_csv(history_path, mode='w', header=True, index=False)
+
+print("Report generated and history logged successfully.")
