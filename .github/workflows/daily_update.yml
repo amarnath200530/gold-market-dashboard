@@ -1,9 +1,9 @@
-name: Daily Gold Market Dashboard
+name: Gold Market Dashboard
 
 on:
   schedule:
-    - cron: '0 12 * * 1-5'   # Runs weekdays at 12:00 UTC
-  workflow_dispatch:          # Allows manual trigger from GitHub UI
+    - cron: '*/5 * * * *'      # Every 5 minutes (fastest allowed)
+  workflow_dispatch:            # Manual trigger still available
 
 jobs:
   update-dashboard:
@@ -31,5 +31,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add output/latest_report.md
-          git commit -m "Update gold market dashboard [skip ci]" || echo "No changes to commit"
+          git commit -m "Update gold dashboard [skip ci]" || echo "No changes"
           git push
