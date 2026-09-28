@@ -1,35 +1,45 @@
-name: Gold Market Dashboard
+name: Gold Market Dashboard (3-min refresh)
 
 on:
   schedule:
-    - cron: '*/5 * * * *'      # Every 5 minutes (fastest allowed)
-  workflow_dispatch:            # Manual trigger still available
+    - cron: '0 */6 * * 1-5'   # Starts a new loop every 6 hours, weekdays
+  workflow_dispatch:           # Manual start button
+
+concurrency:
+  group: gold-dashboard        # Prevents two loops running at once
+  cancel-in-progress: false
 
 jobs:
   update-dashboard:
     runs-on: ubuntu-latest
+    timeout-minutes: 355       # GitHub max is 360
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run dashboard script
+      - name: Run dashboard every 3 minutes
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python dashboard.py
-
-      - name: Commit and push results
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add output/latest_report.md
-          git commit -m "Update gold dashboard [skip ci]" || echo "No changes"
-          git push
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          END=$((SECONDS + 340*60))   # Loop for 340 minutes
+          while [ $SECONDS -lt $END ]; do
+            python dashboard.py || echo "Script error - will retry next cycle"
+            git add output/latest_report.md
+            git commit -m "Dashboard update [skip ci]" --quiet || echo "No changes"
+            git pull --rebase --quiet && git push --quiet || echo "Push failed - retry next cycle"
+            sleep 180
+          done
