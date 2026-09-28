@@ -1,0 +1,50 @@
+# Gold Market Dashboard
+
+_Last updated: 2026-09-28 03:36:31.780354 UTC_
+
+## US Real Interest Rates
+
+- **10Y TIPS Real Yield:** 2.85% (as of 2026-09-24)
+- **1-Month Change:** 0.53 pts
+
+## Inflation Expectations
+
+- **10Y Breakeven Inflation:** 2.34%
+- **5Y Breakeven Inflation:** 2.34%
+
+## US Dollar Index (DXY)
+
+- **DXY Latest:** 101.10
+- **1-Month Change:** 1.95%
+
+## Safe-Haven Demand Proxy (VIX & Gold)
+
+- **VIX Latest:** 14.87
+- **Gold Spot (Futures):** $4228.60
+- **1-Month Change:** -9.34%
+
+## Fed Policy Expectations
+
+- **Current Effective Fed Funds Rate:** 3.88%
+- Check CME FedWatch for rate cut/hike probabilities: [link](https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html)
+
+## Next FOMC Meeting
+
+Check calendar: [Federal Reserve FOMC Calendar](https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm)
+
+## Latest CPI Data
+
+- **CPI Index Latest:** 334.13
+- **YoY CPI Inflation:** 3.71%
+- Release calendar: [BLS CPI Schedule](https://www.bls.gov/schedule/news_release/cpi.htm)
+
+## Central Bank Gold Demand
+
+No free real-time API available. Check manually:
+- [World Gold Council](https://www.gold.org/goldhub/data/gold-demand-by-country)
+- [IMF IFS Official Reserves](https://data.imf.org)
+
+## ETF Flows & COT Positioning
+
+- [SPDR Gold Shares (GLD) Holdings](https://www.spdrgoldshares.com)
+- [CFTC COT Report](https://www.cftc.gov/dea/futures/other_lf.htm) (updated weekly, Fridays 3:30pm ET)
