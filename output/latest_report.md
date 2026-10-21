@@ -1,6 +1,6 @@
 # Gold Market Dashboard
 
-_Last updated: 2026-10-21 01:12:15.570940+00:00 UTC_
+_Last updated: 2026-10-21 01:15:23.636653+00:00 UTC_
 
 ## US Real Interest Rates
 
@@ -20,8 +20,8 @@ _Last updated: 2026-10-21 01:12:15.570940+00:00 UTC_
 ## Safe-Haven Demand Proxy (VIX & Gold)
 
 - **VIX Latest:** 17.31
-- **Gold Spot (Futures):** $4134.30
-- **1-Month Change:** -5.69%
+- **Gold Spot (Futures):** $4128.40
+- **1-Month Change:** -5.83%
 
 ## Fed Policy Expectations
 
