@@ -1,1 +1,1 @@
-{"timestamp_utc": "2026-10-27T13:33:58.363191+00:00", "score": 0, "verdict": "NEUTRAL / mixed signals", "real_yield_10y": 2.66, "real_yield_10y_1m_chg": -0.09999999999999964, "dxy": 102.20099639892578, "dxy_1m_chg_pct": 0.989129921807752, "vix": 17.8799991607666, "gold_price": 4039.5}
+{"timestamp_utc": "2026-10-27T13:37:07.880041+00:00", "score": -1, "verdict": "NEUTRAL / mixed signals", "real_yield_10y": 2.66, "real_yield_10y_1m_chg": -0.09999999999999964, "dxy": 102.22799682617188, "dxy_1m_chg_pct": 1.0158101866894809, "vix": 17.920000076293945, "gold_price": 4036.0}
