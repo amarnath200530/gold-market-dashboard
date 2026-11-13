@@ -1,6 +1,6 @@
 # Gold Market Dashboard
 
-_Last updated: 2026-11-13 23:48:45.560175+00:00 UTC_
+_Last updated: 2026-11-13 23:51:58.348136+00:00 UTC_
 
 ## US Real Interest Rates
 
