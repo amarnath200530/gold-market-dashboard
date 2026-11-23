@@ -1,6 +1,6 @@
 # Gold Market Dashboard
 
-_Last updated: 2026-11-23 12:07:41.353462+00:00 UTC_
+_Last updated: 2026-11-23 12:10:47.570880+00:00 UTC_
 
 ## US Real Interest Rates
 
@@ -14,14 +14,14 @@ _Last updated: 2026-11-23 12:07:41.353462+00:00 UTC_
 
 ## US Dollar Index (DXY)
 
-- **DXY Latest:** 103.92
-- **1-Month Change:** 2.08%
+- **DXY Latest:** 103.91
+- **1-Month Change:** 2.07%
 
 ## Safe-Haven Demand Proxy (VIX & Gold)
 
-- **VIX Latest:** 30.02
-- **Gold Spot (Futures):** $3620.90
-- **1-Month Change:** -9.66%
+- **VIX Latest:** 30.05
+- **Gold Spot (Futures):** $3619.20
+- **1-Month Change:** -9.70%
 
 ## Fed Policy Expectations
 
@@ -55,8 +55,8 @@ No free real-time API available. Check manually:
 |---|---|---|---|
 | Real yields (1M chg) | +0.11 | -1 | Real yields rising |
 | 10Y breakeven (1M chg) | -0.22 | -1 | Inflation expectations falling |
-| DXY (1M % chg) | +2.08% | -1 | Dollar strengthening |
-| VIX | 30.02 | +1 | Elevated fear - safe-haven demand |
+| DXY (1M % chg) | +2.07% | -1 | Dollar strengthening |
+| VIX | 30.05 | +1 | Elevated fear - safe-haven demand |
 
 **Total score: -2 -> BEARISH pressure on gold**
 
