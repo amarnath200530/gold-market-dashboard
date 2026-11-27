@@ -1,6 +1,6 @@
 # Gold Market Dashboard
 
-_Last updated: 2026-11-27 22:04:25.693175+00:00 UTC_
+_Last updated: 2026-11-27 22:07:31.853918+00:00 UTC_
 
 ## US Real Interest Rates
 
@@ -9,8 +9,8 @@ _Last updated: 2026-11-27 22:04:25.693175+00:00 UTC_
 
 ## Inflation Expectations
 
-- **10Y Breakeven Inflation:** 2.12%
-- **5Y Breakeven Inflation:** 2.13%
+- **10Y Breakeven Inflation:** 2.15%
+- **5Y Breakeven Inflation:** 2.16%
 
 ## US Dollar Index (DXY)
 
@@ -54,7 +54,7 @@ No free real-time API available. Check manually:
 | Factor | Value | Score | Reading |
 |---|---|---|---|
 | Real yields (1M chg) | +0.07 | +0 | Real yields flat |
-| 10Y breakeven (1M chg) | -0.22 | -1 | Inflation expectations falling |
+| 10Y breakeven (1M chg) | -0.20 | -1 | Inflation expectations falling |
 | DXY (1M % chg) | +1.78% | -1 | Dollar strengthening |
 | VIX | 23.81 | +0 | No significant fear |
 
