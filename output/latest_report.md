@@ -1,11 +1,11 @@
 # Gold Market Dashboard
 
-_Last updated: 2026-11-27 21:14:25.914061+00:00 UTC_
+_Last updated: 2026-11-27 21:17:32.883652+00:00 UTC_
 
 ## US Real Interest Rates
 
-- **10Y TIPS Real Yield:** 2.79% (as of 2026-11-24)
-- **1-Month Change:** 0.13 pts
+- **10Y TIPS Real Yield:** 2.73% (as of 2026-11-25)
+- **1-Month Change:** 0.07 pts
 
 ## Inflation Expectations
 
@@ -53,11 +53,11 @@ No free real-time API available. Check manually:
 
 | Factor | Value | Score | Reading |
 |---|---|---|---|
-| Real yields (1M chg) | +0.13 | -1 | Real yields rising |
+| Real yields (1M chg) | +0.07 | +0 | Real yields flat |
 | 10Y breakeven (1M chg) | -0.22 | -1 | Inflation expectations falling |
 | DXY (1M % chg) | +1.81% | -1 | Dollar strengthening |
 | VIX | 23.81 | +0 | No significant fear |
 
-**Total score: -3 -> BEARISH pressure on gold**
+**Total score: -2 -> BEARISH pressure on gold**
 
 _Note: Excludes central bank buying, COT and geopolitics (no live data). Not financial advice._
